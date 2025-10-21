@@ -1,5 +1,5 @@
+import { FileText } from "lucide-react";
 import { useState } from "react";
-import { User, Phone, FileText, Users, Shield } from "lucide-react";
 import "./App.css";
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
 
   const validateForm = () => {
     const newErrors = {};
-    const requiredFields = [
+/*     const requiredFields = [
       "plotNo", "date", "nameOfCustomer", "gender", "projectArea",
       "nationality", "dob", "occupation", "qualification", "planNo",
       "communicationAddress", "pincode", "mobileNo", "email",
@@ -68,7 +68,9 @@ function App() {
       "nomineeRelationship", "nameOfGuardian", "so_wf_do", "relationshipWithCustomer",
       "address", "introducerName", "introducerMobileNo", "immSupervisorName",
       "cedName", "diamountDirectorName", "diamountDirectorPhone", "photo"
-    ];
+    ]; */
+
+    const requiredFields = ["nameOfCustomer", "email", "mobileNo"]
 
     requiredFields.forEach(field => {
       if (!formData[field]) {
@@ -109,13 +111,11 @@ function App() {
         data.append(key, value);
       });
 
-      const response = await fetch(
-        "https://customer-form-8auo.onrender.com/api/plot/booking/create",
-        {
-          method: "POST",
-          body: data, // send as multipart/form-data
-        }
-      );
+      const baseUrl = process.env.REACT_APP_API_URL
+      const response = await fetch(baseUrl, {
+        method: "POST",
+        body: data, // send as multipart/form-data
+      });
 
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
       const result = await response.json();
@@ -136,8 +136,8 @@ function App() {
       <div className="form-wrapper">
         {/* Header */}
         <div className="form-header">
-          <div className="company-logo">
-            <Shield className="logo-icon" />
+          <div className="company-logo">  
+            <img width={60} height={60} src="/log.jpg" alt="company logo" />
           </div>
           <h1 className="company-title">Life Housing & Properties</h1>
           <p className="form-subtitle">Plot Booking Form</p>
