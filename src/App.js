@@ -70,7 +70,13 @@ function App() {
       "cedName", "diamountDirectorName", "diamountDirectorPhone", "photo"
     ]; */
 
-    const requiredFields = ["nameOfCustomer", "email", "mobileNo"]
+    const requiredFields = [
+      "nameOfCustomer",
+      "email",
+      "mobileNo",
+      "address",
+      "introducerName",
+    ];
 
     requiredFields.forEach(field => {
       if (!formData[field]) {
