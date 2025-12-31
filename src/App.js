@@ -76,6 +76,7 @@ function App() {
       "mobileNo",
       "address",
       "introducerName",
+      "address",
     ];
 
     requiredFields.forEach(field => {
@@ -112,15 +113,30 @@ function App() {
 
     setIsSubmitting(true);
     try {
-      const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
-      });
+      // Convert photo to base64 if present
+      let photoBase64 = null;
+      if (formData.photo) {
+        photoBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.photo);
+        });
+      }
 
-      const baseUrl = process.env.REACT_APP_API_URL
+      // Prepare payload as JSON
+      const payload = {
+        ...formData,
+        photo: photoBase64, // replace file object with base64 string
+      };
+
+      const baseUrl = process.env.REACT_APP_API_URL;
       const response = await fetch(baseUrl, {
         method: "POST",
-        body: data, // send as multipart/form-data
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload), // send as JSON payload
       });
 
       if (!response.ok) throw new Error(`Server error: ${response.status}`);
@@ -178,15 +194,63 @@ function App() {
               </div>
             </div>
 
+            {/* Customer Info */}
+            <div className="grid-2">
+              <div className="input-field">
+                <label>Customer Name<span className="required">*</span></label>
+                <input
+                  type="text"
+                  name="nameOfCustomer"
+                  value={formData.nameOfCustomer || ""}
+                  onChange={handleChange}
+                />
+                {errors.nameOfCustomer && <span className="error">{errors.nameOfCustomer}</span>}
+              </div>
+              <div className="input-field">
+                <label>Mobile Number<span className="required">*</span></label>
+                <input
+                  type="tel"
+                  name="mobileNo"
+                  value={formData.mobileNo || ""}
+                  onChange={handleChange}
+                />
+                {errors.mobileNo && <span className="error">{errors.mobileNo}</span>}
+              </div>
+            </div>
+            
             <div className="input-field">
-              <label>Customer Name</label>
+              <label>Email Address<span className="required">*</span></label>
               <input
-                type="text"
-                name="nameOfCustomer"
-                value={formData.nameOfCustomer || ""}
+                type="email"
+                name="email"
+                value={formData.email || ""}
                 onChange={handleChange}
               />
-              {errors.nameOfCustomer && <span className="error">{errors.nameOfCustomer}</span>}
+              {errors.email && <span className="error">{errors.email}</span>}
+            </div>
+
+            {/* Introducer Info */}
+            <div className="grid-2">
+              <div className="input-field">
+                <label>Introducer Name</label>
+                <input
+                  type="text"
+                  name="introducerName"
+                  value={formData.introducerName || ""}
+                  onChange={handleChange}
+                />
+                {errors.introducerName && <span className="error">{errors.introducerName}</span>}
+              </div>
+              <div className="input-field">
+                <label>Introducer Mobile</label>
+                <input
+                  type="tel"
+                  name="introducerMobileNo"
+                  value={formData.introducerMobileNo || ""}
+                  onChange={handleChange}
+                />
+                {errors.introducerMobileNo && <span className="error">{errors.introducerMobileNo}</span>}
+              </div>
             </div>
 
             <div className="input-field">
@@ -206,6 +270,17 @@ function App() {
                 ))}
               </div>
               {errors.gender && <span className="error">{errors.gender}</span>}
+            </div>
+
+             <div className="input-field">
+              <label>Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address || ""}
+                onChange={handleChange}
+              />
+              {errors.address && <span className="error">{errors.address}</span>}
             </div>
 
             <div className="input-field">
@@ -309,38 +384,15 @@ function App() {
               {errors.communicationAddress && <span className="error">{errors.communicationAddress}</span>}
             </div>
 
-            <div className="grid-2">
-              <div className="input-field">
-                <label>Pincode</label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode || ""}
-                  onChange={handleChange}
-                />
-                {errors.pincode && <span className="error">{errors.pincode}</span>}
-              </div>
-              <div className="input-field">
-                <label>Mobile Number</label>
-                <input
-                  type="tel"
-                  name="mobileNo"
-                  value={formData.mobileNo || ""}
-                  onChange={handleChange}
-                />
-                {errors.mobileNo && <span className="error">{errors.mobileNo}</span>}
-              </div>
-            </div>
-
             <div className="input-field">
-              <label>Email Address</label>
+              <label>Pincode</label>
               <input
-                type="email"
-                name="email"
-                value={formData.email || ""}
+                type="text"
+                name="pincode"
+                value={formData.pincode || ""}
                 onChange={handleChange}
               />
-              {errors.email && <span className="error">{errors.email}</span>}
+              {errors.pincode && <span className="error">{errors.pincode}</span>}
             </div>
 
             {/* Family & Nominee */}
@@ -434,41 +486,6 @@ function App() {
                   onChange={handleChange}
                 />
                 {errors.relationshipWithCustomer && <span className="error">{errors.relationshipWithCustomer}</span>}
-              </div>
-            </div>
-
-            <div className="input-field">
-              <label>Address</label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address || ""}
-                onChange={handleChange}
-              />
-              {errors.address && <span className="error">{errors.address}</span>}
-            </div>
-
-            {/* Introducer & Officers */}
-            <div className="grid-2">
-              <div className="input-field">
-                <label>Introducer Name</label>
-                <input
-                  type="text"
-                  name="introducerName"
-                  value={formData.introducerName || ""}
-                  onChange={handleChange}
-                />
-                {errors.introducerName && <span className="error">{errors.introducerName}</span>}
-              </div>
-              <div className="input-field">
-                <label>Introducer Mobile</label>
-                <input
-                  type="tel"
-                  name="introducerMobileNo"
-                  value={formData.introducerMobileNo || ""}
-                  onChange={handleChange}
-                />
-                {errors.introducerMobileNo && <span className="error">{errors.introducerMobileNo}</span>}
               </div>
             </div>
 

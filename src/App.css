@@ -96,6 +96,12 @@
   color: #444;
 }
 
+.required {
+  color: #dc2626;
+  margin-left: 0.25rem;
+  font-weight: 600;
+}
+
 .input-field input,
 .input-field textarea,
 .input-field select {
