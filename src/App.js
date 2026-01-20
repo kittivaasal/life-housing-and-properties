@@ -75,7 +75,7 @@ function App() {
       "email",
       "mobileNo",
       "address",
-      "introducerName",
+      // "introducerName",
       "address",
     ];
 
@@ -273,7 +273,7 @@ function App() {
             </div>
 
              <div className="input-field">
-              <label>Address</label>
+              <label>Address<span className="required">*</span></label>
               <input
                 type="text"
                 name="address"
