@@ -269,10 +269,13 @@ function App() {
       }
 
       // Prepare payload as JSON
+      console.log(formData);
       const payload = {
         ...formData,
         projectId: formData.schemeNo, // Mapping schemeNo (ID) to projectId
         photo: photoBase64, // replace file object with base64 string
+        cedId: formData.cedId ? formData.cedId : null,
+        ddId: formData.ddId ? formData.ddId : null,
       };
 
       // Remove display-only fields from payload if backend doesn't accept them
