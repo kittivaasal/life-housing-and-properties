@@ -43,6 +43,8 @@ function App() {
     schemeNo: "", // Added (mapped to projectId)
     idNo: "", // Added
     photo: null,
+    offered: "No", // default to No
+    offers: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -244,6 +246,10 @@ function App() {
     // Email validation only if provided
     if (formData.email && !/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Enter a valid email address";
+
+    if (formData.offered === "Yes" && (!formData.offers || !formData.offers.trim())) {
+      newErrors.offers = "Offer details are required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -610,6 +616,36 @@ function App() {
               />
               {errors.projectArea && (
                 <span className="error">{errors.projectArea}</span>
+              )}
+            </div>
+
+            <div className="grid-2">
+              <div className="input-field">
+                <label>Offered</label>
+                <select
+                  name="offered"
+                  value={formData.offered || "No"}
+                  onChange={handleChange}
+                  style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ddd", width: "100%", outline: "none", backgroundColor: "white", appearance: "auto" }}
+                >
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+              {formData.offered === "Yes" && (
+                <div className="input-field">
+                  <label>
+                    Offers <span className="required" style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="offers"
+                    value={formData.offers || ""}
+                    onChange={handleChange}
+                    style={errors.offers ? { border: "1px solid red" } : {}}
+                  />
+                  {errors.offers && <span className="error" style={{ color: "red", fontSize: "0.85rem", marginTop: "4px", display: "block" }}>{errors.offers}</span>}
+                </div>
               )}
             </div>
 
